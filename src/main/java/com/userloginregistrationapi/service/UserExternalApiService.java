@@ -82,40 +82,4 @@ public class UserExternalApiService {
                 .block();
     }
 
-
-//    public void saveNewUserAttributes(UserAttributesModel userAttributesModel){
-//        webClient3.post()
-//                .uri("/add")
-//                .bodyValue(userAttributesModel)
-//                .retrieve()
-//                .toBodilessEntity()
-//                .subscribe(responseEntity -> {},
-//                        error -> {
-//                            if (error instanceof WebClientResponseException ex) {
-//                                throw ex;
-//                            } else {
-//                                System.err.println("An unexpected error occurred: " + error.getMessage());
-//                            }
-//                        });
-//
-//    }
-//
-//    public void saveNewUserCredentials(UserRegistrationModel userModel){
-//        webClient2.post()
-//                .uri("/add")
-//                .bodyValue(userModel)
-//                .retrieve()
-//                .toBodilessEntity()
-//                .subscribe(responseEntity -> {},
-//                        error -> {
-//                            if (error instanceof WebClientResponseException ex) {
-//                                throw ex;
-//                            } else {
-//                                System.err.println("An unexpected error occurred: " + error.getMessage());
-//                            }
-//                        });
-//    }
-
-
-
 }
