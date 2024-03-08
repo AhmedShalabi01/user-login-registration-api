@@ -9,12 +9,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 
 @Component
-public class UserServiceExternalAPIs {
+public class UserExternalApiService {
     private final WebClient webClient;
     private final WebClient webClient2;
     private final WebClient webClient3;
 
-    public UserServiceExternalAPIs() {
+    public UserExternalApiService() {
         this.webClient = WebClient.builder()
                 .baseUrl("http://localhost:8081/employee")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
