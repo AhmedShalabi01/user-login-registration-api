@@ -31,39 +31,39 @@ public class UserExternalApiService {
     }
 
 
-    public UserCompanyModel fetchUserInfoFromCompanyDB(String userId){
+    public UserCompanyModel fetchUserInfoFromCompanyDB(String userId) {
         return webClient.get()
-                .uri("/{id}/info" ,userId)
+                .uri("/{id}/info", userId)
                 .retrieve()
                 .bodyToMono(UserCompanyModel.class)
                 .block();
     }
 
-    public UserAttributesModel fetchUserAttributesFromCompanyDB(String userId){
+    public UserAttributesModel fetchUserAttributesFromCompanyDB(String userId) {
         return webClient.get()
-                .uri("/{id}/attributes" ,userId)
+                .uri("/{id}/attributes", userId)
                 .retrieve()
                 .bodyToMono(UserAttributesModel.class)
                 .block();
     }
 
-    public UserRegistrationModel fetchUserCredentials(String userId){
+    public UserRegistrationModel fetchUserCredentials(String userId) {
         return webClient2.get()
-                .uri("/id/{id}" ,userId)
+                .uri("/id/{id}", userId)
                 .retrieve()
                 .bodyToMono(UserRegistrationModel.class)
                 .block();
     }
 
-    public UserAttributesModel fetchUserAttributes(String userId){
+    public UserAttributesModel fetchUserAttributes(String userId) {
         return webClient3.get()
-                .uri("/findUserAttributes/{id}" ,userId)
+                .uri("/findUserAttributes/{id}", userId)
                 .retrieve()
                 .bodyToMono(UserAttributesModel.class)
                 .block();
     }
 
-    public void saveNewUserAttributes(UserAttributesModel userAttributesModel){
+    public void saveNewUserAttributes(UserAttributesModel userAttributesModel) {
         webClient3.post()
                 .uri("/add")
                 .bodyValue(userAttributesModel)
@@ -73,7 +73,7 @@ public class UserExternalApiService {
 
     }
 
-    public void saveNewUserCredentials(UserRegistrationModel userModel){
+    public void saveNewUserCredentials(UserRegistrationModel userModel) {
         webClient2.post()
                 .uri("/add")
                 .bodyValue(userModel)

@@ -22,19 +22,20 @@ public class UserLoginRegistrationService {
     public UserAttributesModel registerNewUser(@Valid UserRegistrationModel userModel) {
         UserCompanyModel userFetchedFromCompanyDB = userExternalApiService.fetchUserInfoFromCompanyDB(userModel.getId());
 
-         if(userFetchedFromCompanyDB.getSsn().equals(userModel.getSsn())&&
-                 userFetchedFromCompanyDB.getFirstName().equals(userModel.getFirstName())&&
-                 userFetchedFromCompanyDB.getLastName().equals(userModel.getLastName())&&
-                 userFetchedFromCompanyDB.getEmail().equals(userModel.getEmail())){
+        if (userFetchedFromCompanyDB.getSsn().equals(userModel.getSsn()) &&
+                userFetchedFromCompanyDB.getFirstName().equals(userModel.getFirstName()) &&
+                userFetchedFromCompanyDB.getLastName().equals(userModel.getLastName()) &&
+                userFetchedFromCompanyDB.getEmail().equals(userModel.getEmail())) {
+
             UserRegistrationModel registrationModel = new UserRegistrationModel(userModel.getId(), userModel.getSsn()
                     , userModel.getFirstName(), userModel.getLastName()
-                    , userModel.getEmail(),this.passwordEncoder.encode(userModel.getPassword()));
+                    , userModel.getEmail(), this.passwordEncoder.encode(userModel.getPassword()));
 
             UserAttributesModel userAttributesModel = userExternalApiService.fetchUserAttributesFromCompanyDB(userModel.getId());
             userExternalApiService.saveNewUserCredentials(registrationModel);
             userExternalApiService.saveNewUserAttributes(userAttributesModel);
             return userAttributesModel;
-        }else {
+        } else {
             throw new EntityNotFoundException("The User details can not be found please contact ADMIN ");
         }
 
@@ -43,13 +44,13 @@ public class UserLoginRegistrationService {
     public UserAttributesModel validateExistingUser(UserLoginModel userLoginModel) {
 
         UserRegistrationModel userRegistrationModel = userExternalApiService.fetchUserCredentials(userLoginModel.getId());
-        if(userRegistrationModel != null){
+        if (userRegistrationModel != null) {
             boolean isPwdRight = passwordEncoder.matches(userLoginModel.getPassword(), userRegistrationModel.getPassword());
             if (isPwdRight) {
                 return userExternalApiService.fetchUserAttributes(userRegistrationModel.getId());
-            }else
+            } else
                 throw new EntityNotFoundException("User was not found");
-        }else
+        } else
             throw new EntityNotFoundException("User was not found");
     }
 
