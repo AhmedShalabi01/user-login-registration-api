@@ -11,7 +11,7 @@
 	<groupId>com.userloginregestrationapi</groupId>
 	<artifactId>user-login-registration-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>user-login-regestration-api</name>
+	<name>user-login-registration-api</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>
