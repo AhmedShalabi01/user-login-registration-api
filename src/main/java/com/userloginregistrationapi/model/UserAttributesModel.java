@@ -10,7 +10,7 @@ public class UserAttributesModel {
     private String role;
     private String department;
     private TimeSchedule timeSchedule;
-    private int yearOfExperience;
+    private int yearsOfExperience;
     private String clearanceLevel;
     private String employmentStatus;
 }
