@@ -10,29 +10,28 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
 public class UserExternalApiService {
-    private final WebClient webClient;
+    private final WebClient webClient1;
     private final WebClient webClient2;
     private final WebClient webClient3;
 
     public UserExternalApiService() {
-        this.webClient = WebClient.builder()
-                .baseUrl("http://localhost:8081/employee")
+        this.webClient1 = WebClient.builder()
+                .baseUrl("http://localhost:8081/user-credentials")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
         this.webClient2 = WebClient.builder()
-                .baseUrl("http://localhost:8080/user-credentials")
+                .baseUrl("http://localhost:8082/users-attributes")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
         this.webClient3 = WebClient.builder()
-                .baseUrl("http://localhost:8083/users-attributes")
+                .baseUrl("http://localhost:8083/employee")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
-
     }
 
 
     public UserCompanyModel fetchUserInfoFromCompanyDB(String userId) {
-        return webClient.get()
+        return webClient3.get()
                 .uri("/{id}/info", userId)
                 .retrieve()
                 .bodyToMono(UserCompanyModel.class)
@@ -40,7 +39,7 @@ public class UserExternalApiService {
     }
 
     public UserAttributesModel fetchUserAttributesFromCompanyDB(String userId) {
-        return webClient.get()
+        return webClient3.get()
                 .uri("/{id}/attributes", userId)
                 .retrieve()
                 .bodyToMono(UserAttributesModel.class)
@@ -48,7 +47,7 @@ public class UserExternalApiService {
     }
 
     public UserRegistrationModel fetchUserCredentials(String userId) {
-        return webClient2.get()
+        return webClient1.get()
                 .uri("/id/{id}", userId)
                 .retrieve()
                 .bodyToMono(UserRegistrationModel.class)
@@ -56,7 +55,7 @@ public class UserExternalApiService {
     }
 
     public UserAttributesModel fetchUserAttributes(String userId) {
-        return webClient3.get()
+        return webClient2.get()
                 .uri("/findUserAttributes/{id}", userId)
                 .retrieve()
                 .bodyToMono(UserAttributesModel.class)
@@ -64,7 +63,7 @@ public class UserExternalApiService {
     }
 
     public void saveNewUserAttributes(UserAttributesModel userAttributesModel) {
-        webClient3.post()
+        webClient2.post()
                 .uri("/add")
                 .bodyValue(userAttributesModel)
                 .retrieve()
@@ -74,7 +73,7 @@ public class UserExternalApiService {
     }
 
     public void saveNewUserCredentials(UserRegistrationModel userModel) {
-        webClient2.post()
+        webClient1.post()
                 .uri("/add")
                 .bodyValue(userModel)
                 .retrieve()
