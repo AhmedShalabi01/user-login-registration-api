@@ -1,7 +1,6 @@
 package com.userloginregistrationapi.exceptionhandler;
 
 import com.userloginregistrationapi.exceptionhandler.responsebodies.*;
-import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -10,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-import org.yaml.snakeyaml.constructor.DuplicateKeyException;
-
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
