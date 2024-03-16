@@ -11,6 +11,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
+
 @Service
 @AllArgsConstructor
 @Validated
@@ -18,8 +22,8 @@ public class UserLoginRegistrationService {
     private final PasswordEncoder passwordEncoder;
     private final UserExternalApiService userExternalApiService;
 
-
     public UserAttributesModel registerNewUser(@Valid UserRegistrationModel userModel) {
+
         UserCompanyModel userFetchedFromCompanyDB = userExternalApiService.fetchUserInfoFromCompanyDB(userModel.getId());
 
         if (userFetchedFromCompanyDB.getSsn().equals(userModel.getSsn()) &&
