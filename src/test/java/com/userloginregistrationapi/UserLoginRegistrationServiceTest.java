@@ -34,7 +34,6 @@ class UserLoginRegistrationServiceTest {
 
     private static UserRegistrationModel userModel;
     private static UserCompanyModel userCompanyModel;
-    private static TimeSchedule timeSchedule;
     private static UserAttributesModel userAttributesModel;
     private static UserLoginModel userLoginModel;
 
@@ -42,7 +41,7 @@ class UserLoginRegistrationServiceTest {
     static void setup() {
         userModel = new UserRegistrationModel("204209", "32154897513214", "John", "Doe", "john@example.com", "@Test2244");
         userCompanyModel = new UserCompanyModel("204209", "32154897513214", "John", "Doe", "john@example.com");
-        timeSchedule =  new TimeSchedule(LocalTime.of(8, 30), LocalTime.of(17, 30), Set.of("MONDAY", "WEDNESDAY"));
+        TimeSchedule timeSchedule = new TimeSchedule(LocalTime.of(8, 30), LocalTime.of(17, 30), Set.of("MONDAY", "WEDNESDAY"));
         userAttributesModel = new UserAttributesModel("204209", "Manger", "HR", timeSchedule, 5, "Level 1", "Full-time");
         userLoginModel = new UserLoginModel("204209", "@Test2244");
     }
