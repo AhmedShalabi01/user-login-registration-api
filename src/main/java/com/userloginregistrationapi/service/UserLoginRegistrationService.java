@@ -21,6 +21,9 @@ public class UserLoginRegistrationService {
     public UserAttributesModel registerNewUser(@Valid UserRegistrationModel userModel) {
 
         UserCompanyModel userFetchedFromCompanyDB = userExternalApiService.fetchUserInfoFromCompanyDB(userModel.getId());
+        if (userFetchedFromCompanyDB == null) {
+            throw new EntityNotFoundException("The User details can not be found please contact ADMIN ");
+        }
 
         if (userFetchedFromCompanyDB.getSsn().equals(userModel.getSsn()) &&
                 userFetchedFromCompanyDB.getFirstName().equals(userModel.getFirstName()) &&
