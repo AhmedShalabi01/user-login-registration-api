@@ -17,5 +17,4 @@ public class UserLoginRegistrationApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(UserLoginRegistrationApiApplication.class, args);
 	}
-
 }

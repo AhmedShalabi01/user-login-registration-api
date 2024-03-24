@@ -20,7 +20,7 @@ public class UserLoginRegistrationController {
 
 
     @PostMapping(path = "/register")
-    public ResponseEntity<?> registerNewUser(@RequestBody UserRegistrationModel userModel){
+    public ResponseEntity<UserAttributesModel> registerNewUser(@RequestBody UserRegistrationModel userModel){
         UserAttributesModel userAttributesModel = userLoginRegistrationService.registerNewUser(userModel);
         return new ResponseEntity<>(userAttributesModel, HttpStatus.CREATED);
     }
@@ -29,7 +29,6 @@ public class UserLoginRegistrationController {
 
     @PostMapping(path = "/login")
     public ResponseEntity<UserAttributesModel> loginUser(@RequestBody UserLoginModel loginModel) {
-
         UserAttributesModel userAttributesModel = userLoginRegistrationService.validateExistingUser(loginModel);
         return new ResponseEntity<>(userAttributesModel, HttpStatus.OK);
     }
