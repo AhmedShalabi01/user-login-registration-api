@@ -32,7 +32,7 @@ public class UserExternalApiService {
 
     public UserCompanyModel fetchUserInfoFromCompanyDB(String userId) {
         return webClient3.get()
-                .uri("/{id}/info", userId)
+                .uri("/find/id/{id}/info", userId)
                 .retrieve()
                 .bodyToMono(UserCompanyModel.class)
                 .block();
@@ -40,7 +40,7 @@ public class UserExternalApiService {
 
     public UserAttributesModel fetchUserAttributesFromCompanyDB(String userId) {
         return webClient3.get()
-                .uri("/{id}/attributes", userId)
+                .uri("/find/id/{id}/attributes", userId)
                 .retrieve()
                 .bodyToMono(UserAttributesModel.class)
                 .block();
@@ -48,7 +48,7 @@ public class UserExternalApiService {
 
     public UserRegistrationModel fetchUserCredentials(String userId) {
         return webClient1.get()
-                .uri("/id/{id}", userId)
+                .uri("/find/id/{id}", userId)
                 .retrieve()
                 .bodyToMono(UserRegistrationModel.class)
                 .block();
@@ -56,7 +56,7 @@ public class UserExternalApiService {
 
     public UserAttributesModel fetchUserAttributes(String userId) {
         return webClient2.get()
-                .uri("/findUserAttributes/{id}", userId)
+                .uri("/find/id/{id}", userId)
                 .retrieve()
                 .bodyToMono(UserAttributesModel.class)
                 .block();
