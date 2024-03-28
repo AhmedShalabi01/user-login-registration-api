@@ -1,4 +1,4 @@
-package com.userloginregistrationapi.model;
+package org.pacs.userloginregistrationapi.model;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 public class UserRegistrationModel {
 
     private String id;
+
     @NotBlank(message = "SSN cannot be blank")
     @Pattern(regexp = "^\\d{3}-\\d{2}-\\d{4}$", message = "SSN does not follow the standard format")
     private String ssn;

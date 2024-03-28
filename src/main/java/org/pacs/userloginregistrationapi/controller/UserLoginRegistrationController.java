@@ -1,11 +1,11 @@
-package com.userloginregistrationapi.controller;
+package org.pacs.userloginregistrationapi.controller;
 
-import com.userloginregistrationapi.model.EmployeeAttributesModel;
-import com.userloginregistrationapi.model.UserLoginModel;
-import com.userloginregistrationapi.model.UserRegistrationModel;
-import com.userloginregistrationapi.model.VisitorAttributesModel;
-import com.userloginregistrationapi.service.NonceGenerator;
-import com.userloginregistrationapi.service.UserLoginRegistrationService;
+import org.pacs.userloginregistrationapi.model.attributesmodels.EmployeeAttributesModel;
+import org.pacs.userloginregistrationapi.model.UserLoginModel;
+import org.pacs.userloginregistrationapi.model.UserRegistrationModel;
+import org.pacs.userloginregistrationapi.model.attributesmodels.VisitorAttributesModel;
+import org.pacs.userloginregistrationapi.service.NonceGenerator;
+import org.pacs.userloginregistrationapi.service.UserLoginRegistrationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +18,7 @@ public class UserLoginRegistrationController {
 
     private final UserLoginRegistrationService userLoginRegistrationService;
     private final NonceGenerator nonceGenerator;
+
     @PostMapping(path = "/employee/register")
     public ResponseEntity<EmployeeAttributesModel> registerNewEmployee(@RequestBody UserRegistrationModel userModel){
         EmployeeAttributesModel employeeAttributesModel = userLoginRegistrationService.registerNewEmployee(userModel);

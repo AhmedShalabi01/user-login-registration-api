@@ -1,6 +1,7 @@
-package com.userloginregistrationapi.exceptionhandler.responsebodies;
+package org.pacs.userloginregistrationapi.exceptionhandler.responsebodies;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,6 +13,7 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class WebClientResponseExceptionBody {
     @JsonProperty("timestamp")
+    @JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
     private  String dateTime;
     @JsonProperty("status")
     private  String status;

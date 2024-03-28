@@ -1,9 +1,13 @@
-package com.userloginregistrationapi.service;
+package org.pacs.userloginregistrationapi.service;
 
-import com.userloginregistrationapi.model.*;
+import org.pacs.userloginregistrationapi.model.UserInfoModel;
+import org.pacs.userloginregistrationapi.model.attributesmodels.EmployeeAttributesModel;
+import org.pacs.userloginregistrationapi.model.attributesmodels.VisitorAttributesModel;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.pacs.userloginregistrationapi.model.UserLoginModel;
+import org.pacs.userloginregistrationapi.model.UserRegistrationModel;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -31,8 +35,8 @@ public class UserLoginRegistrationService {
 
         userExternalApiService.saveNewEmployeeCredentials(userModel);
         userExternalApiService.saveNewEmployeeAttributes(employeeAttributesModel);
-        return employeeAttributesModel;
 
+        return employeeAttributesModel;
     }
 
     public VisitorAttributesModel registerNewVisitor(@Valid UserRegistrationModel userModel){
@@ -48,8 +52,10 @@ public class UserLoginRegistrationService {
         } else {
             throw new EntityNotFoundException("The User details can not be found please contact ADMIN ");
         }
+
         userExternalApiService.saveNewVisitorCredentials(userModel);
         userExternalApiService.saveNewVisitorAttributes(visitorAttributesModel);
+
         return visitorAttributesModel;
     }
 
@@ -79,5 +85,4 @@ public class UserLoginRegistrationService {
                 userInfoModel.getLastName().equals(userRegistrationModel.getLastName()) &&
                 userInfoModel.getEmail().equals(userRegistrationModel.getEmail());
     }
-
 }

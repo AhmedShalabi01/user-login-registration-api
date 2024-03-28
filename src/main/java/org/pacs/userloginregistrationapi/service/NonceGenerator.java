@@ -1,4 +1,4 @@
-package com.userloginregistrationapi.service;
+package org.pacs.userloginregistrationapi.service;
 
 import org.springframework.stereotype.Service;
 

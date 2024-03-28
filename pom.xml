@@ -8,11 +8,11 @@
 		<version>3.2.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.userloginregestrationapi</groupId>
+	<groupId>org.pacs</groupId>
 	<artifactId>user-login-registration-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>user-login-registration-api</name>
-	<description>Demo project for Spring Boot</description>
+	<description>user-login-registration-api</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>

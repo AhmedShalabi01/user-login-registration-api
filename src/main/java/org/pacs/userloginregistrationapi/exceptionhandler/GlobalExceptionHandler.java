@@ -1,8 +1,10 @@
-package com.userloginregistrationapi.exceptionhandler;
+package org.pacs.userloginregistrationapi.exceptionhandler;
 
-import com.userloginregistrationapi.exceptionhandler.responsebodies.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
+import org.pacs.userloginregistrationapi.exceptionhandler.responsebodies.ConstraintViolationExceptionResponseBody;
+import org.pacs.userloginregistrationapi.exceptionhandler.responsebodies.EntityNotFoundExceptionBody;
+import org.pacs.userloginregistrationapi.exceptionhandler.responsebodies.WebClientResponseExceptionBody;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;

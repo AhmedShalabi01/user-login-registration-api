@@ -1,8 +1,9 @@
-package com.userloginregistrationapi;
+package org.pacs.userloginregistrationapi;
 
-import com.userloginregistrationapi.model.*;
-import com.userloginregistrationapi.service.UserExternalApiService;
-import com.userloginregistrationapi.service.UserLoginRegistrationService;
+import org.pacs.userloginregistrationapi.model.UserInfoModel;
+import org.pacs.userloginregistrationapi.model.attributesmodels.EmployeeAttributesModel;
+import org.pacs.userloginregistrationapi.service.UserExternalApiService;
+import org.pacs.userloginregistrationapi.service.UserLoginRegistrationService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.pacs.userloginregistrationapi.model.TimeSchedule;
+import org.pacs.userloginregistrationapi.model.UserLoginModel;
+import org.pacs.userloginregistrationapi.model.UserRegistrationModel;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 

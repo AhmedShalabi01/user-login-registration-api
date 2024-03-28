@@ -1,9 +1,9 @@
-package com.userloginregistrationapi.service;
+package org.pacs.userloginregistrationapi.service;
 
-import com.userloginregistrationapi.model.EmployeeAttributesModel;
-import com.userloginregistrationapi.model.UserInfoModel;
-import com.userloginregistrationapi.model.UserRegistrationModel;
-import com.userloginregistrationapi.model.VisitorAttributesModel;
+import org.pacs.userloginregistrationapi.model.attributesmodels.EmployeeAttributesModel;
+import org.pacs.userloginregistrationapi.model.UserInfoModel;
+import org.pacs.userloginregistrationapi.model.UserRegistrationModel;
+import org.pacs.userloginregistrationapi.model.attributesmodels.VisitorAttributesModel;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -96,7 +96,6 @@ public class UserExternalApiService {
                 .block();
     }
 
-
     //---------------------------------------------------------------------------------------//
 
     public UserInfoModel fetchVisitorInfoFromVisitorApi(String email) {
@@ -158,7 +157,4 @@ public class UserExternalApiService {
                 .toBodilessEntity()
                 .block();
     }
-
-
-
 }
