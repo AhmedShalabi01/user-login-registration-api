@@ -1,8 +1,9 @@
 package com.userloginregistrationapi.service;
 
-import com.userloginregistrationapi.model.UserAttributesModel;
-import com.userloginregistrationapi.model.UserCompanyModel;
+import com.userloginregistrationapi.model.EmployeeAttributesModel;
+import com.userloginregistrationapi.model.UserInfoModel;
 import com.userloginregistrationapi.model.UserRegistrationModel;
+import com.userloginregistrationapi.model.VisitorAttributesModel;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -13,6 +14,7 @@ public class UserExternalApiService {
     private final WebClient webClient1;
     private final WebClient webClient2;
     private final WebClient webClient3;
+    private final WebClient webClient4;
 
     public UserExternalApiService() {
         this.webClient1 = WebClient.builder()
@@ -27,58 +29,136 @@ public class UserExternalApiService {
                 .baseUrl("http://localhost:8083/employee")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
+        this.webClient4 = WebClient.builder()
+                .baseUrl("http://localhost:8087/visitor")
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .build();
     }
 
 
-    public UserCompanyModel fetchUserInfoFromCompanyDB(String userId) {
+    public UserInfoModel fetchEmployeeInfoFromCompanyApi(String email) {
         return webClient3.get()
-                .uri("/find/id/{id}/info", userId)
+                .uri(uriBuilder -> uriBuilder
+                        .path("/find/info/email")
+                        .queryParam("email", email)
+                        .build())
                 .retrieve()
-                .bodyToMono(UserCompanyModel.class)
+                .bodyToMono(UserInfoModel.class)
                 .block();
     }
 
-    public UserAttributesModel fetchUserAttributesFromCompanyDB(String userId) {
+    public EmployeeAttributesModel fetchEmployeeAttributesFromCompanyApi(String email) {
         return webClient3.get()
-                .uri("/find/id/{id}/attributes", userId)
+                .uri(uriBuilder -> uriBuilder
+                        .path("/find/attributes/email")
+                        .queryParam("email", email)
+                        .build())
                 .retrieve()
-                .bodyToMono(UserAttributesModel.class)
+                .bodyToMono(EmployeeAttributesModel.class)
                 .block();
     }
 
-    public UserRegistrationModel fetchUserCredentials(String userId) {
+    public UserRegistrationModel fetchEmployeeCredentials(String email) {
         return webClient1.get()
-                .uri("/find/id/{id}", userId)
+                .uri(uriBuilder -> uriBuilder
+                        .path("/employee/find/email")
+                        .queryParam("email", email)
+                        .build())
                 .retrieve()
                 .bodyToMono(UserRegistrationModel.class)
                 .block();
     }
 
-    public UserAttributesModel fetchUserAttributes(String userId) {
+    public EmployeeAttributesModel fetchEmployeeAttributesFromAttributesApi(String userId) {
         return webClient2.get()
-                .uri("/find/id/{id}", userId)
+                .uri("/employee/find/id/{id}", userId)
                 .retrieve()
-                .bodyToMono(UserAttributesModel.class)
+                .bodyToMono(EmployeeAttributesModel.class)
                 .block();
     }
 
-    public void saveNewUserAttributes(UserAttributesModel userAttributesModel) {
+    public void saveNewEmployeeAttributes(EmployeeAttributesModel employeeAttributesModel) {
         webClient2.post()
-                .uri("/add")
-                .bodyValue(userAttributesModel)
+                .uri("/employee/add")
+                .bodyValue(employeeAttributesModel)
                 .retrieve()
                 .toBodilessEntity()
                 .block();
 
     }
 
-    public void saveNewUserCredentials(UserRegistrationModel userModel) {
+    public void saveNewEmployeeCredentials(UserRegistrationModel userModel) {
         webClient1.post()
-                .uri("/add")
+                .uri("/employee/add")
                 .bodyValue(userModel)
                 .retrieve()
                 .toBodilessEntity()
                 .block();
     }
+
+
+    //---------------------------------------------------------------------------------------//
+
+    public UserInfoModel fetchVisitorInfoFromVisitorApi(String email) {
+        return webClient4.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/find/info")
+                        .queryParam("email", email)
+                        .build())
+                .retrieve()
+                .bodyToMono(UserInfoModel.class)
+                .block();
+    }
+
+    public VisitorAttributesModel fetchVisitorAttributesFromVisitorApi(String email) {
+        return webClient4.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/find/attributes")
+                        .queryParam("email", email)
+                        .build())
+                .retrieve()
+                .bodyToMono(VisitorAttributesModel.class)
+                .block();
+    }
+
+    public UserRegistrationModel fetchVisitorCredentials(String email) {
+        return webClient1.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/visitor/find/email")
+                        .queryParam("email", email)
+                        .build())
+                .retrieve()
+                .bodyToMono(UserRegistrationModel.class)
+                .block();
+    }
+
+    public VisitorAttributesModel fetchVisitorAttributesFromAttributesApi(String userId) {
+        return webClient2.get()
+                .uri("/visitor/find/id/{id}", userId)
+                .retrieve()
+                .bodyToMono(VisitorAttributesModel.class)
+                .block();
+    }
+
+    public void saveNewVisitorAttributes(VisitorAttributesModel visitorAttributesModel) {
+        webClient2.post()
+                .uri("/visitor/add")
+                .bodyValue(visitorAttributesModel)
+                .retrieve()
+                .toBodilessEntity()
+                .block();
+
+    }
+
+    public void saveNewVisitorCredentials(UserRegistrationModel userModel) {
+        webClient1.post()
+                .uri("/visitor/add")
+                .bodyValue(userModel)
+                .retrieve()
+                .toBodilessEntity()
+                .block();
+    }
+
+
 
 }

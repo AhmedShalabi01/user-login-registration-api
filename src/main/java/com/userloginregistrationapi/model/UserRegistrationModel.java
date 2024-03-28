@@ -9,10 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserRegistrationModel {
-    @NotBlank(message = "User ID cannot be blank")
-    @Size(min = 1, max = 1000000, message = "User ID does not meet size requirements")
-    private String id;
 
+    private String id;
     @NotBlank(message = "SSN cannot be blank")
     @Pattern(regexp = "^\\d{3}-\\d{2}-\\d{4}$", message = "SSN does not follow the standard format")
     private String ssn;

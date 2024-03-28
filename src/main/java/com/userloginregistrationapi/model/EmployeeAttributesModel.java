@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class UserAttributesModel {
+public class EmployeeAttributesModel {
     private String id;
     private String role;
     private String department;

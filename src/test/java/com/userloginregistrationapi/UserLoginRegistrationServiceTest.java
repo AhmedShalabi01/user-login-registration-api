@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.time.LocalTime;
 import java.util.Set;
@@ -32,72 +33,72 @@ class UserLoginRegistrationServiceTest {
     @InjectMocks
     private UserLoginRegistrationService userLoginRegistrationService;
 
-    private static UserRegistrationModel userModel;
-    private static UserCompanyModel userCompanyModel;
-    private static UserAttributesModel userAttributesModel;
+    private static UserRegistrationModel userRegestrationModel;
+    private static UserInfoModel userInfoModel;
+    private static EmployeeAttributesModel employeeAttributesModel;
     private static UserLoginModel userLoginModel;
 
     @BeforeAll
     static void setup() {
-        userModel = new UserRegistrationModel("204209", "32154897513214", "John", "Doe", "john@example.com", "@Test2244");
-        userCompanyModel = new UserCompanyModel("204209", "32154897513214", "John", "Doe", "john@example.com");
+        userRegestrationModel = new UserRegistrationModel("204209", "32154897513214", "John", "Doe", "john@example.com", "@Test2244");
+        userInfoModel = new UserInfoModel("204209", "32154897513214", "John", "Doe", "john@example.com");
         TimeSchedule timeSchedule = new TimeSchedule(LocalTime.of(8, 30), LocalTime.of(17, 30), Set.of("MONDAY", "WEDNESDAY"));
-        userAttributesModel = new UserAttributesModel("204209", "Manger", "HR", timeSchedule, 5, "Level 1", "Full-time");
+        employeeAttributesModel = new EmployeeAttributesModel("204209", "Manger", "HR", timeSchedule, 5, "Level 1", "Full-time");
         userLoginModel = new UserLoginModel("204209", "@Test2244");
     }
 
     @Test
     void testRegisterNewUser_Success() {
 
-        when(userExternalApiService.fetchUserInfoFromCompanyDB(any())).thenReturn(userCompanyModel);
+        when(userExternalApiService.fetchEmployeeInfoFromCompanyApi(any())).thenReturn(userInfoModel);
         when(passwordEncoder.encode(any())).thenReturn("encodedPassword");
-        when(userExternalApiService.fetchUserAttributesFromCompanyDB(any())).thenReturn(userAttributesModel);
+        when(userExternalApiService.fetchEmployeeAttributesFromCompanyApi(any())).thenReturn(employeeAttributesModel);
 
-        userLoginRegistrationService.registerNewUser(userModel);
+        userLoginRegistrationService.registerNewEmployee(userRegestrationModel);
 
-        verify(userExternalApiService, times(1)).fetchUserInfoFromCompanyDB(any());
+        verify(userExternalApiService, times(1)).fetchEmployeeInfoFromCompanyApi(any());
         verify(passwordEncoder, times(1)).encode(any());
-        verify(userExternalApiService, times(1)).fetchUserAttributesFromCompanyDB(any());
-        verify(userExternalApiService, times(1)).saveNewUserCredentials(any());
-        verify(userExternalApiService, times(1)).saveNewUserAttributes(any());
+        verify(userExternalApiService, times(1)).fetchEmployeeAttributesFromCompanyApi(any());
+        verify(userExternalApiService, times(1)).saveNewEmployeeCredentials(any());
+        verify(userExternalApiService, times(1)).saveNewEmployeeAttributes(any());
     }
 
     @Test
     void testValidateExistingUser_Success() {
 
-        when(userExternalApiService.fetchUserCredentials(any())).thenReturn(userModel);
-        when(passwordEncoder.matches(any(), any())).thenReturn(true);
-        when(userExternalApiService.fetchUserAttributes(any())).thenReturn(userAttributesModel);
+        when(userExternalApiService.fetchEmployeeCredentials(userLoginModel.getEmail())).thenReturn(userRegestrationModel);
+        when(passwordEncoder.matches(userLoginModel.getPassword(),userRegestrationModel.getPassword())).thenReturn(true);
+        when(userExternalApiService.fetchEmployeeAttributesFromAttributesApi(userRegestrationModel.getId())).thenReturn(employeeAttributesModel);
 
-        userLoginRegistrationService.validateExistingUser(userLoginModel);
+        userLoginRegistrationService.validateExistingEmployee(userLoginModel);
 
-        verify(userExternalApiService, times(1)).fetchUserCredentials(any());
-        verify(passwordEncoder, times(1)).matches(any(), any());
-        verify(userExternalApiService, times(1)).fetchUserAttributes(any());
+        verify(userExternalApiService, times(1)).fetchEmployeeCredentials(userLoginModel.getEmail());
+        verify(passwordEncoder, times(1)).matches(userLoginModel.getPassword(), userRegestrationModel.getPassword());
+        verify(userExternalApiService, times(1)).fetchEmployeeAttributesFromAttributesApi(userRegestrationModel.getId());
     }
     @Test
     void testRegisterNewUser_Failure_UserNotFound() {
 
-        when(userExternalApiService.fetchUserInfoFromCompanyDB(any())).thenReturn(null);
+        when(userExternalApiService.fetchEmployeeInfoFromCompanyApi(any())).thenThrow(WebClientResponseException.class);
 
-        assertThrows(EntityNotFoundException.class, () -> userLoginRegistrationService.registerNewUser(userModel));
+        assertThrows(WebClientResponseException.class, () -> userLoginRegistrationService.registerNewEmployee(userRegestrationModel));
     }
 
     @Test
     void testValidateExistingUser_Failure_UserNotFound() {
 
-        when(userExternalApiService.fetchUserCredentials(any())).thenReturn(null);
+        when(userExternalApiService.fetchEmployeeCredentials(any())).thenThrow(WebClientResponseException.class);
 
-        assertThrows(EntityNotFoundException.class, () -> userLoginRegistrationService.validateExistingUser(userLoginModel));
+        assertThrows(WebClientResponseException.class, () -> userLoginRegistrationService.validateExistingEmployee(userLoginModel));
     }
 
     @Test
     void testValidateExistingUser_Failure_IncorrectPassword() {
         UserRegistrationModel userRegistrationModel = new UserRegistrationModel("204209", "32154897513214", "John", "Doe", "john@example.com", "@Test");
 
-        when(userExternalApiService.fetchUserCredentials(any())).thenReturn(userRegistrationModel);
+        when(userExternalApiService.fetchEmployeeCredentials(any())).thenReturn(userRegistrationModel);
         when(passwordEncoder.matches(any(), any())).thenReturn(false);
 
-        assertThrows(EntityNotFoundException.class, () -> userLoginRegistrationService.validateExistingUser(userLoginModel));
+        assertThrows(EntityNotFoundException.class, () -> userLoginRegistrationService.validateExistingEmployee(userLoginModel));
     }
 }

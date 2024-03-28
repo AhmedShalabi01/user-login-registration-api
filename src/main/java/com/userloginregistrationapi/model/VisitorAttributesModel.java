@@ -5,10 +5,9 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class UserCompanyModel {
+public class VisitorAttributesModel {
     private String id;
-    private String ssn;
-    private String firstName;
-    private String lastName;
-    private String email;
+    private String role;
+    private TimeSchedule timeSchedule;
+    private String clearanceLevel;
 }

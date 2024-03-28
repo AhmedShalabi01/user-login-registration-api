@@ -1,9 +1,6 @@
 package com.userloginregistrationapi.service;
 
-import com.userloginregistrationapi.model.UserAttributesModel;
-import com.userloginregistrationapi.model.UserCompanyModel;
-import com.userloginregistrationapi.model.UserLoginModel;
-import com.userloginregistrationapi.model.UserRegistrationModel;
+import com.userloginregistrationapi.model.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -18,43 +15,69 @@ public class UserLoginRegistrationService {
     private final PasswordEncoder passwordEncoder;
     private final UserExternalApiService userExternalApiService;
 
-    public UserAttributesModel registerNewUser(@Valid UserRegistrationModel userModel) {
+    public EmployeeAttributesModel registerNewEmployee(@Valid UserRegistrationModel userModel) {
 
-        UserCompanyModel userFetchedFromCompanyDB = userExternalApiService.fetchUserInfoFromCompanyDB(userModel.getId());
-        if (userFetchedFromCompanyDB == null) {
-            throw new EntityNotFoundException("The User details can not be found please contact ADMIN ");
-        }
+        UserInfoModel userFetchedFromCompanyDB = userExternalApiService.fetchEmployeeInfoFromCompanyApi(userModel.getEmail());
+        EmployeeAttributesModel employeeAttributesModel = userExternalApiService.fetchEmployeeAttributesFromCompanyApi(userModel.getEmail());
+        Boolean checkCredentials = checkCredentials(userFetchedFromCompanyDB, userModel);
 
-        if (userFetchedFromCompanyDB.getSsn().equals(userModel.getSsn()) &&
-                userFetchedFromCompanyDB.getFirstName().equals(userModel.getFirstName()) &&
-                userFetchedFromCompanyDB.getLastName().equals(userModel.getLastName()) &&
-                userFetchedFromCompanyDB.getEmail().equals(userModel.getEmail())) {
-
-            UserRegistrationModel registrationModel = new UserRegistrationModel(userModel.getId(), userModel.getSsn()
-                    , userModel.getFirstName(), userModel.getLastName()
-                    , userModel.getEmail(), this.passwordEncoder.encode(userModel.getPassword()));
-
-            UserAttributesModel userAttributesModel = userExternalApiService.fetchUserAttributesFromCompanyDB(userModel.getId());
-            userExternalApiService.saveNewUserCredentials(registrationModel);
-            userExternalApiService.saveNewUserAttributes(userAttributesModel);
-            return userAttributesModel;
+        if (checkCredentials) {
+            String encodedPass = this.passwordEncoder.encode(userModel.getPassword());
+            userModel.setPassword(encodedPass);
+            userModel.setId(userFetchedFromCompanyDB.getId());
         } else {
             throw new EntityNotFoundException("The User details can not be found please contact ADMIN ");
         }
 
+        userExternalApiService.saveNewEmployeeCredentials(userModel);
+        userExternalApiService.saveNewEmployeeAttributes(employeeAttributesModel);
+        return employeeAttributesModel;
+
     }
 
-    public UserAttributesModel validateExistingUser(UserLoginModel userLoginModel) {
+    public VisitorAttributesModel registerNewVisitor(@Valid UserRegistrationModel userModel){
 
-        UserRegistrationModel userRegistrationModel = userExternalApiService.fetchUserCredentials(userLoginModel.getId());
-        if (userRegistrationModel != null) {
+        UserInfoModel userFetchedFromVisitorsDB = userExternalApiService.fetchVisitorInfoFromVisitorApi(userModel.getEmail());
+        VisitorAttributesModel visitorAttributesModel = userExternalApiService.fetchVisitorAttributesFromVisitorApi(userModel.getEmail());
+        Boolean checkCredentials = checkCredentials(userFetchedFromVisitorsDB,userModel);
+
+        if (checkCredentials) {
+            String encodedPass = this.passwordEncoder.encode(userModel.getPassword());
+            userModel.setPassword(encodedPass);
+            userModel.setId(userFetchedFromVisitorsDB.getId());
+        } else {
+            throw new EntityNotFoundException("The User details can not be found please contact ADMIN ");
+        }
+        userExternalApiService.saveNewVisitorCredentials(userModel);
+        userExternalApiService.saveNewVisitorAttributes(visitorAttributesModel);
+        return visitorAttributesModel;
+    }
+
+    public EmployeeAttributesModel validateExistingEmployee(UserLoginModel userLoginModel) {
+
+        UserRegistrationModel userRegistrationModel = userExternalApiService.fetchEmployeeCredentials(userLoginModel.getEmail());
             boolean isPwdRight = passwordEncoder.matches(userLoginModel.getPassword(), userRegistrationModel.getPassword());
             if (isPwdRight) {
-                return userExternalApiService.fetchUserAttributes(userRegistrationModel.getId());
+                return userExternalApiService.fetchEmployeeAttributesFromAttributesApi(userRegistrationModel.getId());
             } else
                 throw new EntityNotFoundException("User was not found");
+    }
+
+    public VisitorAttributesModel validateExistingVisitor(UserLoginModel userLoginModel) {
+
+        UserRegistrationModel userRegistrationModel = userExternalApiService.fetchVisitorCredentials(userLoginModel.getEmail());
+        boolean isPwdRight = passwordEncoder.matches(userLoginModel.getPassword(), userRegistrationModel.getPassword());
+        if (isPwdRight) {
+            return userExternalApiService.fetchVisitorAttributesFromAttributesApi(userRegistrationModel.getId());
         } else
             throw new EntityNotFoundException("User was not found");
+    }
+
+    private Boolean checkCredentials(UserInfoModel userInfoModel, UserRegistrationModel userRegistrationModel) {
+        return userInfoModel.getSsn().equals(userRegistrationModel.getSsn()) &&
+                userInfoModel.getFirstName().equals(userRegistrationModel.getFirstName()) &&
+                userInfoModel.getLastName().equals(userRegistrationModel.getLastName()) &&
+                userInfoModel.getEmail().equals(userRegistrationModel.getEmail());
     }
 
 }
