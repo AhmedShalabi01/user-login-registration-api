@@ -8,6 +8,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class VisitorAttributesModel {
     private String id;
+    private String department;
     private String role;
     private TimeSchedule timeSchedule;
     private String clearanceLevel;
