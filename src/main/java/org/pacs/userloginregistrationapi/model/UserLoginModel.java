@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class UserLoginModel {
 
     @NotBlank(message = "Email cannot be blank")
-    @Email
+    @Email(message = "Given Email address has an unsuitable format")
     private String email;
     @NotBlank(message = "Password cannot be empty")
     private String password;
