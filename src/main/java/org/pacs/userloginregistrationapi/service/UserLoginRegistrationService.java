@@ -11,6 +11,7 @@ import org.pacs.userloginregistrationapi.model.UserRegistrationModel;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Service
 @AllArgsConstructor
@@ -21,16 +22,22 @@ public class UserLoginRegistrationService {
 
     public EmployeeAttributesModel registerNewEmployee(@Valid UserRegistrationModel userModel) {
 
-        UserInfoModel userFetchedFromCompanyDB = userExternalApiService.fetchEmployeeInfoFromCompanyApi(userModel.getEmail());
-        EmployeeAttributesModel employeeAttributesModel = userExternalApiService.fetchEmployeeAttributesFromCompanyApi(userModel.getEmail());
-        Boolean checkCredentials = checkCredentials(userFetchedFromCompanyDB, userModel);
+        UserInfoModel employeeFetchedFromCompanyDB;
+        EmployeeAttributesModel employeeAttributesModel;
 
-        if (checkCredentials) {
+        try {
+            employeeFetchedFromCompanyDB = userExternalApiService.fetchEmployeeInfoFromCompanyApi(userModel.getEmail());
+            employeeAttributesModel = userExternalApiService.fetchEmployeeAttributesFromCompanyApi(userModel.getEmail());
+        } catch (WebClientResponseException exception) {
+            throw new EntityNotFoundException("The Employee details can not be found please contact ADMIN");
+        }
+
+        if (checkCredentials(employeeFetchedFromCompanyDB, userModel)) {
             String encodedPass = this.passwordEncoder.encode(userModel.getPassword());
             userModel.setPassword(encodedPass);
-            userModel.setId(userFetchedFromCompanyDB.getId());
+            userModel.setId(employeeFetchedFromCompanyDB.getId());
         } else {
-            throw new EntityNotFoundException("The User details can not be found please contact ADMIN ");
+            throw new EntityNotFoundException("The Employee details can not be found please contact ADMIN");
         }
 
         userExternalApiService.saveNewEmployeeCredentials(userModel);
@@ -41,16 +48,22 @@ public class UserLoginRegistrationService {
 
     public VisitorAttributesModel registerNewVisitor(@Valid UserRegistrationModel userModel){
 
-        UserInfoModel userFetchedFromVisitorsDB = userExternalApiService.fetchVisitorInfoFromVisitorApi(userModel.getEmail());
-        VisitorAttributesModel visitorAttributesModel = userExternalApiService.fetchVisitorAttributesFromVisitorApi(userModel.getEmail());
-        Boolean checkCredentials = checkCredentials(userFetchedFromVisitorsDB,userModel);
+        UserInfoModel visitorFetchedFromVisitorDB;
+        VisitorAttributesModel visitorAttributesModel;
 
-        if (checkCredentials) {
+        try {
+            visitorFetchedFromVisitorDB = userExternalApiService.fetchVisitorInfoFromVisitorApi(userModel.getEmail());
+            visitorAttributesModel = userExternalApiService.fetchVisitorAttributesFromVisitorApi(userModel.getEmail());
+        } catch (WebClientResponseException exception) {
+            throw new EntityNotFoundException("The Visitor details can not be found please contact ADMIN");
+        }
+
+        if (checkCredentials(visitorFetchedFromVisitorDB,userModel)) {
             String encodedPass = this.passwordEncoder.encode(userModel.getPassword());
             userModel.setPassword(encodedPass);
-            userModel.setId(userFetchedFromVisitorsDB.getId());
+            userModel.setId(visitorFetchedFromVisitorDB.getId());
         } else {
-            throw new EntityNotFoundException("The User details can not be found please contact ADMIN ");
+            throw new EntityNotFoundException("The Visitor details can not be found please contact ADMIN");
         }
 
         userExternalApiService.saveNewVisitorCredentials(userModel);
@@ -66,7 +79,7 @@ public class UserLoginRegistrationService {
             if (isPwdRight) {
                 return userExternalApiService.fetchEmployeeAttributesFromAttributesApi(userRegistrationModel.getId());
             } else
-                throw new EntityNotFoundException("User was not found");
+                throw new EntityNotFoundException("Employee was not found");
     }
 
     public VisitorAttributesModel validateExistingVisitor(UserLoginModel userLoginModel) {
@@ -76,7 +89,7 @@ public class UserLoginRegistrationService {
         if (isPwdRight) {
             return userExternalApiService.fetchVisitorAttributesFromAttributesApi(userRegistrationModel.getId());
         } else
-            throw new EntityNotFoundException("User was not found");
+            throw new EntityNotFoundException("Visitor was not found");
     }
 
     private Boolean checkCredentials(UserInfoModel userInfoModel, UserRegistrationModel userRegistrationModel) {

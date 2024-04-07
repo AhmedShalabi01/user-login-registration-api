@@ -35,10 +35,5 @@ public class WebClientResponseExceptionBody {
         this.dateTime= exceptionFormated.substring(10,29);
         this.status = parts[1].split(":")[1].trim();
         this.errorMessages = parts[2].split(":")[1].trim();
-
     }
-
-
-
-
 }
