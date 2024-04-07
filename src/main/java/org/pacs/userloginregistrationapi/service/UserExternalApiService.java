@@ -38,10 +38,7 @@ public class UserExternalApiService {
 
     public UserInfoModel fetchEmployeeInfoFromCompanyApi(String email) {
         return webClient3.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/find/info/email")
-                        .queryParam("email", email)
-                        .build())
+                .uri("/find/info/email/{email}", email)
                 .retrieve()
                 .bodyToMono(UserInfoModel.class)
                 .block();
@@ -49,10 +46,7 @@ public class UserExternalApiService {
 
     public EmployeeAttributesModel fetchEmployeeAttributesFromCompanyApi(String email) {
         return webClient3.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/find/attributes/email")
-                        .queryParam("email", email)
-                        .build())
+                .uri("/find/attributes/email/{email}", email)
                 .retrieve()
                 .bodyToMono(EmployeeAttributesModel.class)
                 .block();
@@ -60,10 +54,7 @@ public class UserExternalApiService {
 
     public UserRegistrationModel fetchEmployeeCredentials(String email) {
         return webClient1.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/employee/find/email")
-                        .queryParam("email", email)
-                        .build())
+                .uri("/employee/find/email/{email}", email)
                 .retrieve()
                 .bodyToMono(UserRegistrationModel.class)
                 .block();
@@ -100,10 +91,7 @@ public class UserExternalApiService {
 
     public UserInfoModel fetchVisitorInfoFromVisitorApi(String email) {
         return webClient4.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/find/info")
-                        .queryParam("email", email)
-                        .build())
+                .uri("/find/info/email/{email}", email)
                 .retrieve()
                 .bodyToMono(UserInfoModel.class)
                 .block();
@@ -111,10 +99,7 @@ public class UserExternalApiService {
 
     public VisitorAttributesModel fetchVisitorAttributesFromVisitorApi(String email) {
         return webClient4.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/find/attributes")
-                        .queryParam("email", email)
-                        .build())
+                .uri("/find/attributes/email/{email}", email)
                 .retrieve()
                 .bodyToMono(VisitorAttributesModel.class)
                 .block();
@@ -122,10 +107,7 @@ public class UserExternalApiService {
 
     public UserRegistrationModel fetchVisitorCredentials(String email) {
         return webClient1.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/visitor/find/email")
-                        .queryParam("email", email)
-                        .build())
+                .uri("/visitor/find/email/{email}", email)
                 .retrieve()
                 .bodyToMono(UserRegistrationModel.class)
                 .block();
