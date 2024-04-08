@@ -2,6 +2,7 @@ package org.pacs.userloginregistrationapi;
 
 import org.pacs.userloginregistrationapi.model.UserInfoModel;
 import org.pacs.userloginregistrationapi.model.attributesmodels.EmployeeAttributesModel;
+import org.pacs.userloginregistrationapi.model.attributesmodels.VisitorAttributesModel;
 import org.pacs.userloginregistrationapi.service.UserExternalApiService;
 import org.pacs.userloginregistrationapi.service.UserLoginRegistrationService;
 import jakarta.persistence.EntityNotFoundException;
@@ -36,29 +37,32 @@ class UserLoginRegistrationServiceTest {
 
     @InjectMocks
     private UserLoginRegistrationService userLoginRegistrationService;
-
-    private static UserRegistrationModel userRegestrationModel;
+    private static UserRegistrationModel userRegistrationModel;
     private static UserInfoModel userInfoModel;
     private static EmployeeAttributesModel employeeAttributesModel;
+    private static VisitorAttributesModel visitorAttributesModel;
     private static UserLoginModel userLoginModel;
 
     @BeforeAll
     static void setup() {
-        userRegestrationModel = new UserRegistrationModel("204209", "32154897513214", "John", "Doe", "john@example.com", "@Test2244");
+        userRegistrationModel = new UserRegistrationModel("204209", "32154897513214", "John", "Doe", "john@example.com", "@Test2244");
         userInfoModel = new UserInfoModel("204209", "32154897513214", "John", "Doe", "john@example.com");
         TimeSchedule timeSchedule = new TimeSchedule(LocalTime.of(8, 30), LocalTime.of(17, 30), Set.of("MONDAY", "WEDNESDAY"));
-        employeeAttributesModel = new EmployeeAttributesModel("204209", "Manger", "HR", timeSchedule, 5, "Level 1", "Full-time");
         userLoginModel = new UserLoginModel("204209", "@Test2244");
+
+        employeeAttributesModel = new EmployeeAttributesModel("204209", "Manger", "HR", timeSchedule, 5, "Level 1", "Full-time");
+        visitorAttributesModel = new VisitorAttributesModel("1","Engineering","Visitor",timeSchedule,"Level 2");
+
     }
 
     @Test
-    void testRegisterNewUser_Success() {
+    void testRegisterNewEmployee_Success() {
 
         when(userExternalApiService.fetchEmployeeInfoFromCompanyApi(any())).thenReturn(userInfoModel);
         when(passwordEncoder.encode(any())).thenReturn("encodedPassword");
         when(userExternalApiService.fetchEmployeeAttributesFromCompanyApi(any())).thenReturn(employeeAttributesModel);
 
-        userLoginRegistrationService.registerNewEmployee(userRegestrationModel);
+        userLoginRegistrationService.registerNewEmployee(userRegistrationModel);
 
         verify(userExternalApiService, times(1)).fetchEmployeeInfoFromCompanyApi(any());
         verify(passwordEncoder, times(1)).encode(any());
@@ -68,28 +72,28 @@ class UserLoginRegistrationServiceTest {
     }
 
     @Test
-    void testValidateExistingUser_Success() {
+    void testValidateExistingEmployee_Success() {
 
-        when(userExternalApiService.fetchEmployeeCredentials(userLoginModel.getEmail())).thenReturn(userRegestrationModel);
-        when(passwordEncoder.matches(userLoginModel.getPassword(),userRegestrationModel.getPassword())).thenReturn(true);
-        when(userExternalApiService.fetchEmployeeAttributesFromAttributesApi(userRegestrationModel.getId())).thenReturn(employeeAttributesModel);
+        when(userExternalApiService.fetchEmployeeCredentials(userLoginModel.getEmail())).thenReturn(userRegistrationModel);
+        when(passwordEncoder.matches(userLoginModel.getPassword(), userRegistrationModel.getPassword())).thenReturn(true);
+        when(userExternalApiService.fetchEmployeeAttributesFromAttributesApi(userRegistrationModel.getId())).thenReturn(employeeAttributesModel);
 
         userLoginRegistrationService.validateExistingEmployee(userLoginModel);
 
         verify(userExternalApiService, times(1)).fetchEmployeeCredentials(userLoginModel.getEmail());
-        verify(passwordEncoder, times(1)).matches(userLoginModel.getPassword(), userRegestrationModel.getPassword());
-        verify(userExternalApiService, times(1)).fetchEmployeeAttributesFromAttributesApi(userRegestrationModel.getId());
+        verify(passwordEncoder, times(1)).matches(userLoginModel.getPassword(), userRegistrationModel.getPassword());
+        verify(userExternalApiService, times(1)).fetchEmployeeAttributesFromAttributesApi(userRegistrationModel.getId());
     }
     @Test
-    void testRegisterNewUser_Failure_UserNotFound() {
+    void testRegisterNewEmployee_Failure_EmployeeNotFound() {
 
-        when(userExternalApiService.fetchEmployeeInfoFromCompanyApi(any())).thenThrow(WebClientResponseException.class);
+        when(userExternalApiService.fetchEmployeeInfoFromCompanyApi(any())).thenThrow(EntityNotFoundException.class);
 
-        assertThrows(WebClientResponseException.class, () -> userLoginRegistrationService.registerNewEmployee(userRegestrationModel));
+        assertThrows(EntityNotFoundException.class, () -> userLoginRegistrationService.registerNewEmployee(userRegistrationModel));
     }
 
     @Test
-    void testValidateExistingUser_Failure_UserNotFound() {
+    void testValidateExistingEmployee_Failure_EmployeeNotFound() {
 
         when(userExternalApiService.fetchEmployeeCredentials(any())).thenThrow(WebClientResponseException.class);
 
@@ -97,7 +101,7 @@ class UserLoginRegistrationServiceTest {
     }
 
     @Test
-    void testValidateExistingUser_Failure_IncorrectPassword() {
+    void testValidateExistingEmployee_Failure_IncorrectPassword() {
         UserRegistrationModel userRegistrationModel = new UserRegistrationModel("204209", "32154897513214", "John", "Doe", "john@example.com", "@Test");
 
         when(userExternalApiService.fetchEmployeeCredentials(any())).thenReturn(userRegistrationModel);
@@ -105,4 +109,63 @@ class UserLoginRegistrationServiceTest {
 
         assertThrows(EntityNotFoundException.class, () -> userLoginRegistrationService.validateExistingEmployee(userLoginModel));
     }
+
+
+    @Test
+    void testRegisterNewVisitor_Success() {
+
+        when(userExternalApiService.fetchVisitorInfoFromVisitorApi(any())).thenReturn(userInfoModel);
+        when(passwordEncoder.encode(any())).thenReturn("encodedPassword");
+        when(userExternalApiService.fetchVisitorAttributesFromVisitorApi(any())).thenReturn(visitorAttributesModel);
+
+        userLoginRegistrationService.registerNewVisitor(userRegistrationModel);
+
+        verify(userExternalApiService, times(1)).fetchVisitorInfoFromVisitorApi(any());
+        verify(passwordEncoder, times(1)).encode(any());
+        verify(userExternalApiService, times(1)).fetchVisitorAttributesFromVisitorApi(any());
+        verify(userExternalApiService, times(1)).saveNewVisitorCredentials(any());
+        verify(userExternalApiService, times(1)).saveNewVisitorAttributes(any());
+    }
+
+    @Test
+    void testValidateExistingVisitor_Success() {
+
+        when(userExternalApiService.fetchVisitorCredentials(userLoginModel.getEmail())).thenReturn(userRegistrationModel);
+        when(passwordEncoder.matches(userLoginModel.getPassword(), userRegistrationModel.getPassword())).thenReturn(true);
+        when(userExternalApiService.fetchVisitorAttributesFromAttributesApi(userRegistrationModel.getId())).thenReturn(visitorAttributesModel);
+
+        userLoginRegistrationService.validateExistingVisitor(userLoginModel);
+
+        verify(userExternalApiService, times(1)).fetchVisitorCredentials(userLoginModel.getEmail());
+        verify(passwordEncoder, times(1)).matches(userLoginModel.getPassword(), userRegistrationModel.getPassword());
+        verify(userExternalApiService, times(1)).fetchVisitorAttributesFromAttributesApi(userRegistrationModel.getId());
+    }
+    @Test
+    void testRegisterNewVisitor_Failure_visitorNotFound() {
+
+        when(userExternalApiService.fetchVisitorInfoFromVisitorApi(any())).thenThrow(EntityNotFoundException.class);
+
+        assertThrows(EntityNotFoundException.class, () -> userLoginRegistrationService.registerNewVisitor(userRegistrationModel));
+    }
+
+    @Test
+    void testValidateExistingVisitor_Failure_VisitorNotFound() {
+
+        when(userExternalApiService.fetchVisitorCredentials(any())).thenThrow(WebClientResponseException.class);
+
+        assertThrows(WebClientResponseException.class, () -> userLoginRegistrationService.validateExistingVisitor(userLoginModel));
+    }
+
+    @Test
+    void testValidateExistingVisitor_Failure_IncorrectPassword() {
+        UserRegistrationModel userRegistrationModel = new UserRegistrationModel("204209", "32154897513214", "John", "Doe", "john@example.com", "@Test");
+
+        when(userExternalApiService.fetchEmployeeCredentials(any())).thenReturn(userRegistrationModel);
+        when(passwordEncoder.matches(any(), any())).thenReturn(false);
+
+        assertThrows(EntityNotFoundException.class, () -> userLoginRegistrationService.validateExistingEmployee(userLoginModel));
+    }
+
+
+
 }
