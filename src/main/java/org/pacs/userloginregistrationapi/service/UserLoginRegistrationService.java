@@ -92,6 +92,13 @@ public class UserLoginRegistrationService {
             throw new EntityNotFoundException("Visitor was not found");
     }
 
+    public UserInfoModel findExistingEmployee(String email) {
+        return userExternalApiService.fetchEmployeeInfoFromUserCredentials(email);
+    }
+    public UserInfoModel findExistingVisitor(String email) {
+        return userExternalApiService.fetchVisitorInfoFromUserCredentials(email);
+    }
+
     private Boolean checkCredentials(UserInfoModel userInfoModel, UserRegistrationModel userRegistrationModel) {
         return userInfoModel.getSsn().equals(userRegistrationModel.getSsn()) &&
                 userInfoModel.getFirstName().equals(userRegistrationModel.getFirstName()) &&

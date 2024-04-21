@@ -1,5 +1,6 @@
 package org.pacs.userloginregistrationapi.controller;
 
+import org.pacs.userloginregistrationapi.model.UserInfoModel;
 import org.pacs.userloginregistrationapi.model.attributesmodels.EmployeeAttributesModel;
 import org.pacs.userloginregistrationapi.model.UserLoginModel;
 import org.pacs.userloginregistrationapi.model.UserRegistrationModel;
@@ -49,5 +50,15 @@ public class UserLoginRegistrationController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Server-Nonce",nonceGenerator.generateNonceWithDateSeed());
         return new ResponseEntity<>(visitorAttributesModel,httpHeaders,HttpStatus.OK);
+    }
+    @GetMapping("/employee/find/email/{email}")
+    public ResponseEntity<UserInfoModel> findEmployeeByEmail(@PathVariable String email) {
+        UserInfoModel user = userLoginRegistrationService.findExistingEmployee(email);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+    @GetMapping("/visitor/find/email/{email}")
+    public ResponseEntity<UserInfoModel> findVisitorByEmail(@PathVariable String email) {
+        UserInfoModel user = userLoginRegistrationService.findExistingVisitor(email);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }

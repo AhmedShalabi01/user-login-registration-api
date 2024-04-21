@@ -87,6 +87,14 @@ public class UserExternalApiService {
                 .block();
     }
 
+    public UserInfoModel    fetchEmployeeInfoFromUserCredentials(String email) {
+        return webClient1.get()
+                .uri("/employee/find/email/{email}", email)
+                .retrieve()
+                .bodyToMono(UserInfoModel.class)
+                .block();
+    }
+
     //---------------------------------------------------------------------------------------//
 
     public UserInfoModel fetchVisitorInfoFromVisitorApi(String email) {
@@ -137,6 +145,14 @@ public class UserExternalApiService {
                 .bodyValue(userModel)
                 .retrieve()
                 .toBodilessEntity()
+                .block();
+    }
+
+    public UserInfoModel fetchVisitorInfoFromUserCredentials(String email) {
+        return webClient1.get()
+                .uri("/visitor/find/email/{email}", email)
+                .retrieve()
+                .bodyToMono(UserInfoModel.class)
                 .block();
     }
 }
