@@ -50,7 +50,7 @@ class UserLoginRegistrationServiceTest {
         TimeSchedule timeSchedule = new TimeSchedule(LocalTime.of(8, 30), LocalTime.of(17, 30), Set.of("MONDAY", "WEDNESDAY"));
         userLoginModel = new UserLoginModel("204209", "@Test2244");
 
-        employeeAttributesModel = new EmployeeAttributesModel("204209", "Manger", "HR", timeSchedule, 5, "Level 1", "Full-time");
+        employeeAttributesModel = new EmployeeAttributesModel("204209", "Manger", "HR", timeSchedule, "Level 1", "Full-time");
         visitorAttributesModel = new VisitorAttributesModel("1","Engineering","Visitor",timeSchedule,"Level 2");
 
     }

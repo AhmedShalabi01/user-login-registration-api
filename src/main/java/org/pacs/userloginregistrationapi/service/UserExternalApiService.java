@@ -75,7 +75,6 @@ public class UserExternalApiService {
                 .retrieve()
                 .toBodilessEntity()
                 .block();
-
     }
 
     public void saveNewEmployeeCredentials(UserRegistrationModel userModel) {
