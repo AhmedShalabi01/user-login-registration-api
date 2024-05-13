@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/pacs")
+@RequestMapping("/login-registration")
 public class UserLoginRegistrationController {
 
     private final SeedGenerator seedGenerator;
