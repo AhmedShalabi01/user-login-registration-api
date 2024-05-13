@@ -40,5 +40,4 @@ public class UserRegistrationModel {
     @Size(min = 7, message = "Password must include at least 7 characters")
     @JsonProperty("PW")
     private String password;
-
 }
