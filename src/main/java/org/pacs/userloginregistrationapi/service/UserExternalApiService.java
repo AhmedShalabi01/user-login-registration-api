@@ -4,6 +4,7 @@ import org.pacs.userloginregistrationapi.model.attributesmodels.EmployeeAttribut
 import org.pacs.userloginregistrationapi.model.UserInfoModel;
 import org.pacs.userloginregistrationapi.model.UserRegistrationModel;
 import org.pacs.userloginregistrationapi.model.attributesmodels.VisitorAttributesModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -16,21 +17,22 @@ public class UserExternalApiService {
     private final WebClient webClient3;
     private final WebClient webClient4;
 
-    public UserExternalApiService() {
-        this.webClient1 = WebClient.builder()
-                .baseUrl("http://localhost:8081/user-credentials")
+    @Autowired
+    public UserExternalApiService(WebClient.Builder webClientBuilder) {
+        this.webClient1 = webClientBuilder
+                .baseUrl("http://USERCREDENTIALS-CREDENTIALS-API/user-credentials")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
-        this.webClient2 = WebClient.builder()
-                .baseUrl("http://localhost:8082/users-attributes")
+        this.webClient2 = webClientBuilder
+                .baseUrl("http://ATTRIBUTES-MANAGEMENT-API/attributes-management/users-attributes")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
-        this.webClient3 = WebClient.builder()
-                .baseUrl("http://localhost:8083/employee")
+        this.webClient3 = webClientBuilder
+                .baseUrl("http://COMPANY-DATA-GATEWAY-API/employee")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
-        this.webClient4 = WebClient.builder()
-                .baseUrl("http://localhost:8087/visitor")
+        this.webClient4 = webClientBuilder
+                .baseUrl("http://VISITOR-MANAGEMENT-API/visitor")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }
