@@ -20,7 +20,7 @@ public class UserExternalApiService {
     @Autowired
     public UserExternalApiService(WebClient.Builder webClientBuilder) {
         this.webClient1 = webClientBuilder
-                .baseUrl("http://USERCREDENTIALS-CREDENTIALS-API/user-credentials")
+                .baseUrl("http://USER-CREDENTIALS-API/user-credentials")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
         this.webClient2 = webClientBuilder
