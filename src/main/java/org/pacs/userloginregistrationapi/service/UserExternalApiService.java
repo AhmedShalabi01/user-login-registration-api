@@ -32,7 +32,7 @@ public class UserExternalApiService {
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
         this.webClient4 = webClientBuilder
-                .baseUrl("http://VISITOR-MANAGEMENT-API/visitor")
+                .baseUrl("http://VISITOR-MANAGEMENT-API/visitor-management")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }
